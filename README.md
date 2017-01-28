@@ -1,5 +1,5 @@
 Core java {Abstraction/Encapsulation/Inheritance/Ploymorphism}
-Advanced java {Collections/Generics/Threads(ExecService,Future)/Lambda/Serialization}
+Advanced java {Collections/Generics/Threads(ExectorService:runnable,Future:callable)/Lambda/Serialization}
 Spring
 Spring Boot
 Hibernate
