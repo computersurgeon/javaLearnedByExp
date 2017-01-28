@@ -1,7 +1,5 @@
-# javaLearnedByExp
-
 Core java {Abstraction/Encapsulation/Inheritance/Ploymorphism}
-Advanced java {Collections/Generics/Threads/Lambda/Serialization}
+Advanced java {Collections/Generics/Threads(ExecService,Future)/Lambda/Serialization}
 Spring
 Spring Boot
 Hibernate
@@ -54,6 +52,9 @@ Difference between import/extends/implemets
 4.) const is a reserved keyword but unused in java
 5.) final modifier means that you cannot change variable, i.e. reference to your object, i.e. assign other value to the same variable. You can however change the state of object itself. 
 6.) Java and Javax it's a extension of java
+7.) Ploymorphism used while inheritance by extending a class {Overriding & overloading & Super}
+8.) Abstraction hiding implementation of logic and exposing object names that can be implemented via interface
+9.) Encapsulation data/object access modifers
 
 When to use new classObject and when to use ClassObject without new
 ------------------------------------------------------------------
@@ -351,9 +352,8 @@ It makes storing and sending objects easy. It has nothing to do with security.
 <T> : Generics avoids explicit conversion of an object's type, instead we pass the object as param.
 
 Object obj = 13;
-int i = obj; // cannot conervt object to int so
+int i = obj; // cannot conervt objtect to int so
 int i = (int)obj; to avoid explicit conversion
-
 Object<Integer> obj = 13;
 Integer i = obj;
 
@@ -465,7 +465,70 @@ So choice of usage depends entirely on your needs but I feel that even if you ne
 2.Tress set will not allow null object .if you try to add null value i will be throw null pointer exception
 
 3.Hash set much faster than tree set.
-	
+
+
+Threads
+-------
+status 
+------
+new, 
+Runnable(ready CPU NA), 
+Running, 
+Blocked(waiting on somthing)/join/wait/notify/notifyAll i.e. to avoid deadlock, 
+Terminated, Priority
+
+Type 1: Either by extending Thread Class
+Type 2: Or by implementing Runnable Interface
+Type 3: ExecutorService interface to execute task asynchronously
+
+Type 1
+------
+Class process1 extends Thread{
+public void run(){for(int i=0;i<5;i++){System.Out.println("processing1@"+i)};}
+}
+process1 pro1 = new process1();
+pro1.start();
+
+Type 2
+------	
+Class process2 implements Runnable{
+public void run(){for(int i=0;i<5;i++){System.Out.println("processing2@"+i)};}
+}
+process2 pro2 = new process2();
+Thread threadpro2 = new Thread(pro2);
+threadpro2.start();
+
+Type 3
+------
+ExecutorService execService = Executors.newSingleThreadExecutor();
+execService.execute(
+new Runnable(){
+public void run(){System.out.println("exec by SingleThreadExecutor.");}
+}
+);
+execService.shutdown();
+
+Executors Types:
+----------------
+Executors.newSingleThreadExecutor();
+Executors.newFixedThreadPool(10);
+Executors.newScheduledThreadPool(10);
+
+Future : To check the task got coompleted or not.
+--------
+Future future = execService.submit(
+new Callable(){
+public String call() throws Exception{return "Result of thread task."}
+}
+);
+
+System.Out.println(future.get());
+
+Synchronized
+------------
+To avoid one thread overriding another use keyword Synchronized
+
+
 ----------------------------------------------------------------------------------------------------------------------------------------------
 (13) Swing main method()
 ---------------------------------------------------------------------------------------------------------------------------------------------
