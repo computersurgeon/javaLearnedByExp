@@ -351,10 +351,11 @@ It makes storing and sending objects easy. It has nothing to do with security.
 <T> : Generics avoids explicit conversion of an object's type, instead we pass the object as param.
 
 Object obj = 13;
-int i = 13; // cannot conervt objtect to int so
-int i = (int)13; to avoid explicit conversion
-Object<int> obj = 13;
-int i = obj;
+int i = obj; // cannot conervt object to int so
+int i = (int)obj; to avoid explicit conversion
+
+Object<Integer> obj = 13;
+Integer i = obj;
 
 ArrayLilst<Integer> obj = new ArrayList<Interger>();
 
