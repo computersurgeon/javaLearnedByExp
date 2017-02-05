@@ -1,0 +1,124 @@
+AngularJS
+
+JS
+Module
+Controller
+
+PARTIALS {HTML}
+eri.html
+
+Module.js
+(function(){
+‘use strict’;
+//angular.module(name, [requires], [configFn]);
+angular.module(‘module_name’,[‘module1’, ‘module2’, ‘module3’])
+.config()
+.run();
+})();
+
+Controller.js
+(function(){})();
+(function(){
+‘use strict’;
+
+var constant_object = {‘constant1’, ‘constant2’, ‘constant3’};
+angular.module(‘module_name’).constant(‘constant_object’, constant_object);
+
+angular.module(‘module_name’).controller(‘controller_name’,controller_object);
+controller_object.$inject[‘dependancy_injection_obj1’, ‘dependancy_injection_obj2’, ‘dependancy_injection_obj3’];
+
+function controller_object(dependency_injection_obj1, dependency_injection_obj2, dependency_injection_obj3 ){
+var vm = this;
+vm.pom1 = pom1;
+vm.pom2 = pom2;
+function pom1(){}
+function pom2(){}
+}
+})();
+
+ShortCuts
+all purpose shortcut is Ctrl+Shift+A
+Ctrl+E recent files
+Ctrl+F search with in the file
+Ctrl+Shift+F search entire workspace
+Ctrl+Shift+N search files
+Ctrl+B Declaration
+Ctrl+Alt+B Implementaion
+
+AngularJs Unit testing is done with karma + Jasmine
+Karma is a browser test runner, It can be used by QUnit, Jasmine, Mocha
+
+Npm –g list
+npm install angular  --save
+npm install -g karma --save-dev
+npm install karma-jasmine jasmine-core -- save-dev
+npm install karma-panthomjs-launcher --save-dev
+karma init -> karma.conf.js
+https://jasmine.github.io/2.0/introduction.html
+describe(‘’, function(){}); suites & specs
+describe(‘Description Of this Unit Test Case’, function(){
+beforeEach(module(‘module_name1’));
+afterEach();
+it(‘test case description’,function(){expect().toBe();});
+});
+
+xdescribe(‘disabled suite’,function(){});
+xit(‘skip this spec’,function(){});
+	
+Expect().Matchers()
+expect().toBe();
+expect().not.toBe();
+expect().toBeNull();
+expect().toEqual();
+expect().toContain(); expect().toMatch();
+expect().toBeDefined(); expect().toBeUnDefined();
+expect().toHaveBeenCalled();
+expect().toBeTruthy();  expect().toBeFalsy();
+expect().toBeLessThan(); expect.toBeGraterThan();
+expect().toThrow(); 
+
+Protractor
+npm install –g protractor
+webdriver-manager update
+webdriver-manager start
+C:\Users\xbbkdcw\AppData\Roaming\npm\node_modules\protractor\example\conf.js
+
+export.config={};
+export.config={
+seleniumAddress:’http://localhost:4444/wd/hub’,
+capabilities:{‘browserName’:’chrome’},
+specs:[‘ example_spec.js’,’test_spec.js’],
+jasmineNodeOpts:{
+showColors:true,
+defaultTimeoutInterval: 30000
+}
+};
+
+test_spec.js
+describe(‘test_description’,function(){});
+describe(‘test_description’,function(){
+beforeEach(function(){//this will run before all the following spec});
+afterEach(function(){//this will run after all the following spec});
+
+it(‘usecase’,function(){
+browser.get(“http://mydomain.com/home”);
+expect(browser.getCurrentUrl().toContain(“home”););
+element(by.model(‘person.name’)).sendKeys(‘kumar’);
+element(by.binding(‘person.name’)).getText().then(function(text){console.log(text);});
+element(by.buttonText(‘submit’)).click();    element(by.partialButtonText(‘sub’)).click();
+element(by.model(‘ddl’)).$(‘[value=“1”]’).click();
+
+element(by.css(“#element_id”)).click();    
+element(by.css(“element_tag#element_id”)).click(); 
+element(by.css(‘table td a’)).getText();
+element.all(by.css(“.class_name tag_name”)).then(function(items){
+element(by.css(‘h1[id=”title”]’)).getText();
+
+expect(items.length).toBe(4);
+expect(items[1].getText()).toBe(“kumar”));
+});
+});
+});
+
+GoodToKnow
+1.)	moment.js to mock date. moment(date_object).format(“DD-MMM-YYYY”)
