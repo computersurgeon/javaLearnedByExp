@@ -120,5 +120,17 @@ expect(items[1].getText()).toBe(“kumar”));
 });
 });
 
+PageObjectModule // helps to reuse in more than one test suites
+home_page.js
+Var home_page = function(){};
+module.exports = new home_page();
+
+home_page_spec.js
+var util = require(‘util’);
+describe(‘suit using pom’, function(){
+var home_page = require(‘home_page.js’);
+it(‘’,function(){//make use of all required objects in home using home_page local var});
+});
+
 GoodToKnow
 1.)	moment.js to mock date. moment(date_object).format(“DD-MMM-YYYY”)
