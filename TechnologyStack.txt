@@ -1,0 +1,188 @@
+1.) Front-end
+1.1) NodeJS
+1.2) Bower
+1.3) Grunt
+1.4) AngularJS
+1.5) Karma
+1.6) Protractor
+1.7) Git
+
+2.) Security
+2.1) TSL/SSL/HTTPS
+2.2) OAUTH2
+2.3) Truststore, Keystore
+
+3.) Backend Service
+3.1) REST Services
+3.2) Swagger doc
+3.3) JPA+Hibernate
+
+4.) Workflow
+4.1) Activity
+
+5.) Database
+5.1) Oracle
+5.2) Hadoop
+
+6.) Things that helps you to understand your requirement // UML : Unified Modeling Language
+6.1) Diagram
+6.1.1) Class Diagram //class, variable, methods
+6.1.2) Component Diagram //component, required & provider interface
+6.1.3) Activity Diagram //workflow
+6.1.3) Sequence Diagram //Interaction between component
+6.1.4) Usecase Diagram
+
+7.) Windows Command
+
+3.) Backend Service
+-------------------
+webservice
+Type 
+Bottom up
+	Service code then wsdl (contract last (Operations,Endpoint, format, security))
+Top down
+	wsdl (contract first) then service code
+
+	Ref: http://javapapers.com/web-service/web-service-introduction-tutorial/
+
+Webservice Client
+--------------------------------------------------------------------------------------------------------------
+3.3) JPA+Hibernate
+------------------
+  3.3.1.) dependancies
+  3.3.2.) Persistnce.xml
+  3.3.3.) EntityBean/POJO
+  3.3.4.) EntityManager
+  3.3.5.) query
+------------------------------------------------------------------------------------------
+3.3.1.) dependancies 
+  <dependency>
+  <groupId>org.springframework.data</groupId>
+  <artifactId>spring-data-jpa</artifactId>
+  <version>${spring_jap_version}</version>
+  </dependency>
+  
+  <dependency>
+  <groupId>org.hibernate</groupId>
+  <artifactId>hibernate-core</artifactId>
+  <version>${hibernate_verion}</version>
+  </dependency>
+  
+  <dependency>
+  <groupId>org.hibernate</groupId>
+  <artifactId>hibernate-entitymanager</artifactId>
+  <version>${hibernate_verion}</version>
+  </dependency>
+------------------------------------------------------------------------------------------  
+3.3.2.) Persistnce.xml 
+------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<persistenc schema>
+<persistence-unit>
+<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>jpa_hibernate.users</class>
+	<properties>
+	<property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
+		<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="hibernate.connection.username" value="financial"/>
+		<property name="hibernate.connection.password" value="financial"/>
+		<property name="hibernate.show_sql" value="true"/>
+		<property name="hibernate.format_sql" value="true"/>
+	</properties>
+	</persistence-unit>
+</persistence-unit>
+</persistenc>
+------------------------------------------------------------------------------------------ 
+3.3.3.) EntityBean/POJO
+-------------------
+package jpa_hibernate;
+import javax.persistence.*;
+
+@Entity
+@Table(name="users")
+public class users {
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_generator")
+	@SequenceGenerator(name="seq_generator", sequenceName = "users_id", allocationSize=1)
+	@Column(name="id")
+	private int id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="bank")
+	private String bank;
+	
+	@Column(name="account")
+	private String account;	
+}
+------------------------------------------------------------------------------------------
+3.3.4.) EntityManager
+-----------------
+javax.persistence.Persistence //Bootstrap class that provides access to an EntityManagerFactory.
+
+EntityManagerFactory emf = Persistence.CreateEntityManagerFactory();
+EntityManager em = emf.createEntityManager();
+			  em.getTransaction().begin();
+			  
+			  em.persist();
+			  em.find();
+			  em.refresh();
+			  em.remove();
+			  
+			  em.getTransaction().commit();
+			  em.close();
+------------------------------------------------------------------------------------------
+3.3.5.) query
+---------  
+
+Query q = 
+	em.createQuery().setParameter().getResultList();
+	em.createNamedQuery().setParameter().getResultList();
+	em.createNativeQuery();
+q.executeUpdate();
+q.getResultList();
+
+StoredProcedureQuery spq = 
+	em.createStoredProcedureQuery().registerStoredProcedureParameter().setParameter();
+spq.execute();
+
+Long commentCount = (Long) spq.getOutputParameterValue("commentCount");
+
+------------------------------------------------------------------------------------------
+CreateQuery: Used to create an JPQL
+em.createQuery(
+"SELECT c FROM Customer c WHERE c.name LIKE :custName")
+.setParameter("custName", name)
+.setMaxResults(10)
+.getResultList();
+----------------------
+createNamedQuery: Used to define queries with name in mapping file or annotation go to this
+@NamedQuery(
+name="findAllCustomersWithName",
+query="SELECT c FROM Customer c WHERE c.name LIKE :custName"
+)
+em.createNamedQuery("findAllCustomersWithName")
+    .setParameter("custName", "Smith")
+    .getResultList();
+----------------------
+createNativeQuery: Used to execute native/pure SQL queries Example
+
+
+Eager fetch
+Fetching the whole record while finding the record using Primary Key.
+
+Lazy fetch
+It checks for the availability of notifies it with primary key if it exists. Then later if you call any of the getter method of that entity then it fetches the whole.
+
+But lazy fetch is possible when you try to fetch the record for the first time. That way, a copy of the whole record is already stored in cache memory. Performance wise, lazy fetch is preferable.
+
+--------------------------------------------------------------------------------------------------------------
+7.) Windows Command
+netstat -ano //find PID #
+netstat -ano | find "8084"
+TASKLIST
+TASKKILL /F /PID #
+
+--------------------------------------------------------------------------------------------------------------
