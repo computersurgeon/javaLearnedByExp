@@ -625,6 +625,139 @@ Main Objects of JDBC API
 	5.) JDBC Vs JPA (ORM)
 		Using JDBC leads to complex mapping between datasets and object.
 		JPA maps EntityClass to it respective Table in the database
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+JPA+Hibernate
+-------------
+  1.) dependancies
+  2.) Persistnce.xml
+  3.) EntityBean/POJO
+  4.) EntityManager
+  5.) query
+------------------------------------------------------------------------------------------
+1.) dependancies 
+  <dependency>
+  <groupId>org.springframework.data</groupId>
+  <artifactId>spring-data-jpa</artifactId>
+  <version>${spring_jap_version}</version>
+  </dependency>
+  
+  <dependency>
+  <groupId>org.hibernate</groupId>
+  <artifactId>hibernate-core</artifactId>
+  <version>${hibernate_verion}</version>
+  </dependency>
+  
+  <dependency>
+  <groupId>org.hibernate</groupId>
+  <artifactId>hibernate-entitymanager</artifactId>
+  <version>${hibernate_verion}</version>
+  </dependency>
+------------------------------------------------------------------------------------------  
+2.) Persistnce.xml 
+------------------
+<?xml version="1.0" encoding="UTF-8"?>
+<persistenc schema>
+<persistence-unit>
+<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+    <class>jpa_hibernate.users</class>
+	<properties>
+	<property name="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"/>
+		<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="hibernate.connection.driver_class" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="hibernate.connection.username" value="financial"/>
+		<property name="hibernate.connection.password" value="financial"/>
+		<property name="hibernate.show_sql" value="true"/>
+		<property name="hibernate.format_sql" value="true"/>
+	</properties>
+	</persistence-unit>
+</persistence-unit>
+</persistenc>
+------------------------------------------------------------------------------------------ 
+3.) EntityBean/POJO
+-------------------
+package jpa_hibernate;
+import javax.persistence.*;
+
+@Entity
+@Table(name="users")
+public class users {
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_generator")
+	@SequenceGenerator(name="seq_generator", sequenceName = "users_id", allocationSize=1)
+	@Column(name="id")
+	private int id;
+	
+	@Column(name="name")
+	private String name;
+	
+	@Column(name="bank")
+	private String bank;
+	
+	@Column(name="account")
+	private String account;	
+}
+------------------------------------------------------------------------------------------
+4.) EntityManager
+-----------------
+javax.persistence.Persistence //Bootstrap class that provides access to an EntityManagerFactory.
+
+EntityManagerFactory emf = Persistence.CreateEntityManagerFactory();
+EntityManager em = emf.createEntityManager();
+			  em.getTransaction().begin();
+			  
+			  em.persist();
+			  em.find();
+			  em.refresh();
+			  em.remove();
+			  
+			  em.getTransaction().commit();
+			  em.close();
+------------------------------------------------------------------------------------------
+5.) Query, StoredProcedureQuery
+-------------------------------  
+
+Query q = 
+	em.createQuery().setParameter().getResultList();
+	em.createNamedQuery().setParameter().getResultList();
+	em.createNativeQuery();
+q.executeUpdate();
+q.getResultList();
+
+StoredProcedureQuery spq = 
+	em.createStoredProcedureQuery().registerStoredProcedureParameter().setParameter();
+spq.execute();
+
+Long commentCount = (Long) spq.getOutputParameterValue("commentCount");
+
+------------------------------------------------------------------------------------------
+CreateQuery: Used to create an JPQL
+em.createQuery(
+"SELECT c FROM Customer c WHERE c.name LIKE :custName")
+.setParameter("custName", name)
+.setMaxResults(10)
+.getResultList();
+----------------------
+createNamedQuery: Used to define queries with name in mapping file or annotation go to this
+@NamedQuery(
+name="findAllCustomersWithName",
+query="SELECT c FROM Customer c WHERE c.name LIKE :custName"
+)
+em.createNamedQuery("findAllCustomersWithName")
+    .setParameter("custName", "Smith")
+    .getResultList();
+----------------------
+createNativeQuery: Used to execute native/pure SQL queries Example
+
+
+Eager fetch
+Fetching the whole record while finding the record using Primary Key.
+
+Lazy fetch
+It checks for the availability of notifies it with primary key if it exists. Then later if you call any of the getter method of that entity then it fetches the whole.
+
+But lazy fetch is possible when you try to fetch the record for the first time. That way, a copy of the whole record is already stored in cache memory. Performance wise, lazy fetch is preferable.
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 (14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
 ---------------------------------------------------------------------------------------------------------------------------------------------
