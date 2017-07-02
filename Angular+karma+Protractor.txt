@@ -5,7 +5,7 @@ Module
 Controller
 
 PARTIALS {HTML}
-eri.html
+index.html
 
 Module.js
 (function(){

@@ -23,10 +23,12 @@ Maven
 (11) Short cut key in eclipse
 (12) Generics in java
 (13) Swing main method() & Swing related
-(14) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
+(14) Different Ways to access Database (JDBC/JPA+Hibernate)
+(14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
 (15) String Handling
 (16) Spring Framework , DispatcherServlet, WebApplicationInitializer (web.xml ! mandate)
 (17) Learn Maven By Experience
+(17.1) Annotation
 (18) Tools
 (19) About EJB, SPRING, Applet, Servlet, Struts, JavaEE, J2EE
 (20) EXTJS
@@ -590,7 +592,41 @@ private JTable tableFilenameMap;
 		this.tableFilenameMap.setModel(dmodel);
 	}
 ---------------------------------------------------------------------------------------------------------------------------------------------
-(14) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
+(14) Different Ways to access Database (JDBC/JPA+Hibernate/MyBatis)
+-------------------------------------------------------------------
+JDBC + ODBC = OJDBC / oracle.jdbc.driver.OracleDriver / jdbc:oracle:thin:@hostname:port:databasename
+
+Main Objects of JDBC API
+	1.) DataSource Vs DriverManger
+		DataSource deals with JNDI, Connection pooling is possible.
+		DriverManager connection has to be opened and close within the java class unlike DataSource
+		
+		Context ctx = new InitialContext();
+		DataSource ds = (DataSource)ctx.lookup("jdbc/datasourceName");
+		
+	2.) Connection
+	DriverManager.getConnection(connectionString)
+	dataSource.getConnection()
+	
+	3.) Statement, PreparedStatement, CallableStatement
+		3.1)Statement normal query, executes only once, slow, used for DDL. 
+		statement.executeQuery()
+		statement.executeUpdate()
+		3.2)PreparedStatement to exec SQL statement multipletimes that is dynamic or parameterized
+		preparedStatement.executeQuery()
+		3.3)CallableStatement for storedprocedure or function call
+		
+		execute() Vs executeQuery() Vs executeUpdate()
+		use execute() when you are not sure which one to use. Which return TRUE so ResultSet/FALSE so int i.e., no. rows affected or nothing 
+		use executeQuery() for SELECT rows
+		use executeUpdate() when performing DML & DDL, output will be in int denotes no. of rows affected.
+		
+	4.) ResultSet
+	5.) JDBC Vs JPA (ORM)
+		Using JDBC leads to complex mapping between datasets and object.
+		JPA maps EntityClass to it respective Table in the database
+---------------------------------------------------------------------------------------------------------------------------------------------
+(14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
 ---------------------------------------------------------------------------------------------------------------------------------------------
 import java.sql.*;
 
@@ -828,7 +864,36 @@ PUBLIC CLASS WEBMVCAPPLICATIONINITIALIZER IMPLEMENTS
       REGISTRATION.ADDMAPPING("*.REQUEST");
     }
 }
+---------------------------------------------------------------------------------------------------------------------------------------------
+(17.1) Annotation (Marker Interface, Target, Retention)
+-----------------
+Annotation aka Metadata/attribute/behaviour
 
+Annotation are metadata does not have any business logic
+
+Examples using @Override
+------------------------
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface Override{}
+
+Consumers/processors of Annotation perform necessary logic. For custom annotation developer have to write their own consumer/processor.
+@Documented
+@Target(ElementType.METHOD/PARAMETER/LOCAL_VARIABLE/CONSTRUCTOR)
+@Renention(RetentionPolicy.SOURCE/CLASS/RUNTIME)
+@Inherited
+
+UserDefined Annotation Example
+------------------------------
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@interface UserDefinedAnnotation{
+public enum Priority {LOW, MEDIUM, HIGH}
+Priority priority() default Priority.LOW;
+}
+
+@UserDefinedAnnotation(priority=UserDefinedAnnotation.Priority.HIGH)
+public void UserDefinedMethod(){}
 ---------------------------------------------------------------------------------------------------------------------------------------------
 (18) Tools
 ----------
@@ -1111,8 +1176,7 @@ public class HibernateUtil {
 	}
 
 }
-
-
+--------------------------------------------------------------------------------------------------------------------------------------------
 (21.a) DTO Vs DAO
 -----------------
 The DTO/DAO would be your model in the MVC pattern
