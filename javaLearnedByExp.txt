@@ -23,12 +23,13 @@ Maven
 (11) Short cut key in eclipse
 (12) Generics in java
 (13) Swing main method() & Swing related
-(14) Different Ways to access Database (JDBC/JPA+Hibernate)
+(14) Different Ways to access Database (JDBC/JPA+Hibernate/Spring Data JPA)
 (14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
 (15) String Handling
 (16) Spring Framework , DispatcherServlet, WebApplicationInitializer (web.xml ! mandate)
 (17) Learn Maven By Experience
 (17.1) Annotation
+(17.2) AspectJ + Spring AOP
 (18) Tools
 (19) About EJB, SPRING, Applet, Servlet, Struts, JavaEE, J2EE
 (20) EXTJS
@@ -592,7 +593,7 @@ private JTable tableFilenameMap;
 		this.tableFilenameMap.setModel(dmodel);
 	}
 ---------------------------------------------------------------------------------------------------------------------------------------------
-(14) Different Ways to access Database (JDBC/JPA+Hibernate/MyBatis)
+(14) Different Ways to access Database (JDBC/JPA+Hibernate/MyBatis/Spring Data JPA)
 -------------------------------------------------------------------
 JDBC + ODBC = OJDBC / oracle.jdbc.driver.OracleDriver / jdbc:oracle:thin:@hostname:port:databasename
 
@@ -703,7 +704,9 @@ public class users {
 javax.persistence.Persistence //Bootstrap class that provides access to an EntityManagerFactory.
 
 EntityManagerFactory emf = Persistence.CreateEntityManagerFactory();
+//sessionFactory in native hibernate
 EntityManager em = emf.createEntityManager();
+//session in native hibernate
 			  em.getTransaction().begin();
 			  
 			  em.persist();
@@ -757,6 +760,72 @@ Lazy fetch
 It checks for the availability of notifies it with primary key if it exists. Then later if you call any of the getter method of that entity then it fetches the whole.
 
 But lazy fetch is possible when you try to fetch the record for the first time. That way, a copy of the whole record is already stored in cache memory. Performance wise, lazy fetch is preferable.
+---------------------------------------------------------------------------------------------------------------------------------------------
+Spring Data JPA 
+----------------
+Advantage of Spring data JpaTemplate
+(To avoid boilerplate(redundent) coding with jpaRepository/curdRepository) i.e., no need to write DAO implementation layer
+You don't need to write the before and after code for persisting, updating, deleting or searching object such as creating Persistence instance, creating EntityManagerFactory instance, creating EntityTransaction instance, creating EntityManager instance, commiting EntityTransaction instance and closing EntityManager.
+
+Step 1: Create Entity class
+Step 2: Create EntityRepository extends CrudRepository/JpaRepository
+Step 3: Create application code to call EntityRepository to save(),findAll(),findOne(), 
+
+jpaRepository Vs crudRepository
+-------------------------------
+CrudRepository mainly provides CRUD functions //save(), findOne(), findAll(), count(), delete(), exists()
+jpaRepository extends PagingAndSortingRepository extends CrudRepository // find*By*(And/Or)*, { delete*By*(And/Or)* or remove*By*(And/Or)* : both are same}
+jpaRepository provides flusing & delete records in batch
+In Spring Data JPA, save and update are both handled by save or saveAndFlush.
+
+QueryMethod
+QueryCreation
+PropertyExpression
+
+findBy //By acts as whereClause
+find*By*(And/Or)*
+
+Here’s an overview of the keywords supported for JPA and what a method containing that keyword essentially translates to.
+Keyword	Sample	JPQL snippet
+And					findByLastnameAndFirstname								… where x.lastname = ?1 and x.firstname = ?2
+Or					findByLastnameOrFirstname								… where x.lastname = ?1 or x.firstname = ?2
+Is,Equals			findByFirstname,findByFirstnameIs,findByFirstnameEquals	… where x.firstname = ?1
+Between				findByStartDateBetween									… where x.startDate between ?1 and ?2
+LessThan			findByAgeLessThan										… where x.age < ?1
+LessThanEqual		findByAgeLessThanEqual									… where x.age <= ?1
+GreaterThan			findByAgeGreaterThan									… where x.age > ?1
+GreaterThanEqual	findByAgeGreaterThanEqual								… where x.age >= ?1
+After				findByStartDateAfter									… where x.startDate > ?1
+Before				findByStartDateBefore									… where x.startDate < ?1
+IsNull				findByAgeIsNull											… where x.age is null
+IsNotNull,NotNull	findByAge(Is)NotNull									… where x.age not null
+Like				findByFirstnameLike										… where x.firstname like ?1
+NotLike				findByFirstnameNotLike									… where x.firstname not like ?1
+StartingWith		findByFirstnameStartingWith								… where x.firstname like ?1(parameter bound with appended %)
+EndingWith			findByFirstnameEndingWith								… where x.firstname like ?1(parameter bound with prepended %)
+Containing			findByFirstnameContaining								… where x.firstname like ?1(parameter bound wrapped in %)
+OrderBy				findByAgeOrderByLastnameDesc							… where x.age = ?1 order by x.lastname desc
+Not					findByLastnameNot										… where x.lastname <> ?1
+In					findByAgeIn(Collection<Age> ages)						… where x.age in ?1
+NotIn				findByAgeNotIn(Collection<Age> age)						… where x.age not in ?1
+TRUE				findByActiveTrue()										… where x.active = true
+FALSE				findByActiveFalse()										… where x.active = false
+IgnoreCase			findByFirstnameIgnoreCase								… where UPPER(x.firstame) = UPPER(?1)
+
+
+NamedQuery
+----------
+@Entity
+@NamedQuery(name = "User.findByEmailAddress",
+  query = "select u from User u where u.emailAddress = ?1")
+public class User {}
+
+NativeQuery
+-----------
+public interface UserRepository extends JpaRepository<User, Long> {
+  @Query(value = "SELECT * FROM USERS WHERE EMAIL_ADDRESS = ?1", nativeQuery = true)
+  User findByEmailAddress(String emailAddress);
+}
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 (14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
@@ -1027,6 +1096,25 @@ Priority priority() default Priority.LOW;
 
 @UserDefinedAnnotation(priority=UserDefinedAnnotation.Priority.HIGH)
 public void UserDefinedMethod(){}
+---------------------------------------------------------------------------------------------------------------------------------------------
+(17.2) AspectJ + Spring AOP
+---------------------------
+AspectJ Annotation
+
+@Aspect
+
+@Before
+@After
+@AfterReturning
+@AfterThrowing
+@Around
+
+Spring AOP
+
+Advice  - Indicates the action to take either before, after, around
+Pointcut - Indicates which package/class/method/signature to intercept by name or regular expression
+Advisor - Group Advice + Pointcut into a single unit
+
 ---------------------------------------------------------------------------------------------------------------------------------------------
 (18) Tools
 ----------
