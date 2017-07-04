@@ -827,6 +827,26 @@ public interface UserRepository extends JpaRepository<User, Long> {
   User findByEmailAddress(String emailAddress);
 }
 
+How to call storedprocedure 
+---------------------------
+In Entity Class
+	@NamedStoredProcedureQuery(
+	name=JPA_Identification,
+	procedureName=Actual_SP_Name,
+	parameters={
+	@StoredProcedureParameter(name=,mode=ParameterMode.IN, type=, ),
+	@StoredProcedureParameter(name=,mode=ParameterMode.OUT, type=, ),
+	@StoredProcedureParameter(name=,mode=ParameterMode.INOUT, type=, )
+	@StoredProcedureParameter(name=,mode=ParameterMode.REF_CURSOR, type=, )
+			   }
+	)
+
+	
+In EntityRepository Interface
+	@Procedure(name=JPA_Identification)
+	T customMethod(@Param("param1") Type param1, @Param("param2") Type param2);
+	
+	
 ---------------------------------------------------------------------------------------------------------------------------------------------
 (14.1) DataBase Helper (Connection, Properties, Statement, CallableStatement, PreparedStatement,ResultSet )
 ---------------------------------------------------------------------------------------------------------------------------------------------
